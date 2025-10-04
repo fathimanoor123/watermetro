@@ -36,7 +36,7 @@ https://github.com/fathimanoor123/watermetro.git
 
 **##SOLUTION**
 --WaterMetro Dashboard addresses the challenges of public transportation by providing a centralized, interactive, and user-friendly platform that:
-     -Allows users to book MetroLink & WaterMetro journeys quickly by selecting origin, destination, date, and number of passengers.
+     -Allows users to book MetroLink & WaterMetro journeys quickly by selecting origin, destination,   date, and number of passengers.
      -Displays available journeys with departure/arrival times, duration, and total fares.
      -Generates e-tickets with QR codes for convenient entry at terminals.
      -Provides detailed terminal information, including descriptions and Google Maps links.
@@ -44,7 +44,7 @@ https://github.com/fathimanoor123/watermetro.git
      -Offers a modern, responsive design compatible with both desktop and mobile devices.
 
 **##SCREENSHOTS:-**
-
+2025-10-04 (10).png
 
 
 
