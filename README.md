@@ -45,7 +45,7 @@ https://github.com/fathimanoor123/watermetro.git
 
 **##SCREENSHOTS:-**
 2025-10-04 (10).png
-
+2025-10-04.png
 
 
 ## How to Run Locally
