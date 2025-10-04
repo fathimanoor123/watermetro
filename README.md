@@ -44,7 +44,7 @@ https://github.com/fathimanoor123/watermetro.git
      -Offers a modern, responsive design compatible with both desktop and mobile devices.
 
 **##SCREENSHOTS:-**
-2025-10-04 (10).png
+https://github.com/fathimanoor123/watermetro/blob/7ef8d337f25c1743b9196d2b65ffaf69b0a3f8a3/2025-10-04.png
 https://github.com/fathimanoor123/watermetro/blob/7ef8d337f25c1743b9196d2b65ffaf69b0a3f8a3/2025-10-04%20(10).png
 
 ## How to Run Locally
