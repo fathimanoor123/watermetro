@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>AquaMetro </title>
+<title>AquaMetro</title>
 
 <script src="https://cdn.tailwindcss.com"></script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -12,17 +12,47 @@
 
 <style>
     body { font-family: 'Inter', sans-serif; background-color: #f0f4f8; }
+
+    /* Hero Section */
     .hero-section {
-        background-image: linear-gradient(rgba(150, 51, 51, 0.6), rgba(0,0,0,0.6)), 
-                          url('image/figure.png');
+        background-image: linear-gradient(rgba(150, 51, 51, 0.6), rgba(0,0,0,0.6)), url('image/figure.png');
         background-size: cover;
         background-position: center;
+        min-height: 80vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
     }
-    .modal-backdrop { transition: opacity 0.3s ease-in-out; }
-    .modal-content { transition: transform 0.3s ease-in-out; transform: translateY(20px); }
-    .modal-backdrop.opacity-100 .modal-content { transform: translateY(0); }
+    @keyframes slideFadeIn {
+        0% { opacity: 0; transform: translateY(20px); }
+        100% { opacity: 1; transform: translateY(0); }
+    }
+    .animate-slide-fade { animation: slideFadeIn 1s ease-out forwards; }
+
+    /* Loader */
     .loader { border-top-color: #3498db; animation: spin 1s linear infinite; }
     @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* Modal Animations */
+    .modal-backdrop { transition: opacity 0.3s ease-in-out; opacity: 0; pointer-events: none; }
+    .modal-backdrop.show { opacity: 1; pointer-events: auto; }
+    .modal-content { transform: translateY(20px); transition: transform 0.3s ease-out, opacity 0.3s ease-out; opacity: 0; }
+    .modal-backdrop.show .modal-content { transform: translateY(0); opacity: 1; }
+
+    /* Search Results Animation */
+    .result-card { transition: transform 0.3s ease, box-shadow 0.3s ease; }
+    .result-card:hover { transform: scale(1.05); box-shadow: 0 10px 25px rgba(0,0,0,0.15); }
+
+    /* News Item Animation */
+    @keyframes fadeInUp {
+        0% { opacity: 0; transform: translateY(10px); }
+        100% { opacity: 1; transform: translateY(0); }
+    }
+    .news-item { animation: fadeInUp 0.5s ease forwards; }
+
+    /* Terminal Hover */
+    .terminal-item { transition: transform 0.3s ease; cursor: pointer; }
+    .terminal-item:hover { transform: translateX(5px); background-color: #E0F7FA; }
 </style>
 </head>
 <body class="antialiased text-gray-800">
@@ -48,7 +78,7 @@
 <!-- Hero Section -->
 <section class="hero-section text-white">
     <div class="container mx-auto px-4 sm:px-6 lg:px-8 py-20 text-center">
-        <h1 class="text-4xl md:text-5xl font-bold mb-4">Welcome to AquaMetro</h1>
+        <h1 class="text-4xl md:text-5xl font-bold mb-4 animate-slide-fade">Welcome to AquaMetro</h1>
     </div>
 </section>
 
@@ -77,7 +107,7 @@
                 <input type="number" id="passengers" value="1" min="1" max="10" required class="mt-1 block w-full border-gray-300 rounded-md">
             </div>
             <div>
-                <button type="submit" class="w-full bg-blue-600 text-white font-semibold py-2 px-4 rounded-md hover:bg-blue-700">
+                <button type="submit" class="w-full bg-blue-600 text-white font-semibold py-2 px-4 rounded-md hover:bg-blue-700 transform transition-transform hover:scale-105">
                     Find Journey
                 </button>
             </div>
@@ -100,7 +130,7 @@
 </section>
 
 <!-- Payment Modal -->
-<div id="payment-modal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50 modal-backdrop opacity-0 pointer-events-none">
+<div id="payment-modal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50 modal-backdrop">
     <div class="bg-white rounded-lg shadow-xl w-full max-w-md p-6 modal-content">
         <div class="flex justify-between items-center border-b pb-3">
             <h3 class="text-xl font-semibold">Confirm & Pay</h3>
@@ -111,13 +141,13 @@
             <div class="mt-6">
                 <p class="font-semibold mb-2">Select Payment Method</p>
                 <div class="flex space-x-4">
-                    <button class="flex-1 p-3 border rounded-lg hover:bg-gray-100">Card</button>
-                    <button class="flex-1 p-3 border rounded-lg hover:bg-gray-100">UPI</button>
-                    <button class="flex-1 p-3 border rounded-lg hover:bg-gray-100">Net Banking</button>
+                    <button class="flex-1 p-3 border rounded-lg hover:bg-gray-100 transform transition-transform hover:scale-105">Card</button>
+                    <button class="flex-1 p-3 border rounded-lg hover:bg-gray-100 transform transition-transform hover:scale-105">UPI</button>
+                    <button class="flex-1 p-3 border rounded-lg hover:bg-gray-100 transform transition-transform hover:scale-105">Net Banking</button>
                 </div>
             </div>
             <div class="mt-6">
-                <button id="confirm-payment-btn" class="w-full bg-green-500 text-white font-bold py-3 px-4 rounded-md hover:bg-green-600">
+                <button id="confirm-payment-btn" class="w-full bg-green-500 text-white font-bold py-3 px-4 rounded-md hover:bg-green-600 transform transition-transform hover:scale-105">
                     Pay Now
                 </button>
             </div>
@@ -126,7 +156,7 @@
 </div>
 
 <!-- Confirmation Modal with QR -->
-<div id="confirmation-modal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50 modal-backdrop opacity-0 pointer-events-none">
+<div id="confirmation-modal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50 modal-backdrop">
     <div class="bg-white rounded-lg shadow-xl w-full max-w-md p-6 text-center modal-content">
         <div class="mx-auto flex items-center justify-center h-12 w-12 rounded-full bg-green-100">
             <svg class="h-6 w-6 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -142,7 +172,7 @@
             <p class="mt-2">Show this QR at the entry gate.</p>
         </div>
         <div class="mt-5">
-            <button id="close-confirmation-modal" class="w-full rounded-md bg-blue-600 text-white py-2 hover:bg-blue-700">Done</button>
+            <button id="close-confirmation-modal" class="w-full rounded-md bg-blue-600 text-white py-2 hover:bg-blue-700 transform transition-transform hover:scale-105">Done</button>
         </div>
     </div>
 </div>
@@ -199,8 +229,6 @@
 <!-- JS -->
 <script>
 document.addEventListener('DOMContentLoaded', () => {
-
-    // Stations
     const stations = ["Central Park","City Hall","Downtown","East Liberty","Financial District",
                       "Green Square","Harbor View","Industrial Zone","Junction Point",
                       "King's Cross","Liberty Heights","Metro Center","Northgate","Oakwood",
@@ -228,7 +256,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const closeConfirmationModalBtn = document.getElementById('close-confirmation-modal');
     const qrCodeImg = document.getElementById('qr-code');
 
-    // Populate station options
     stations.forEach(st => {
         fromStationSelect.add(new Option(st, st));
         toStationSelect.add(new Option(st, st));
@@ -281,8 +308,9 @@ document.addEventListener('DOMContentLoaded', () => {
     function displayResults(journeys){
         if(journeys.length===0){ noResults.classList.remove('hidden'); return; }
         journeys.forEach(j=>{
-            resultsContainer.innerHTML+=`
-            <div class="bg-white rounded-lg shadow-md p-5 flex flex-col sm:flex-row items-center justify-between hover:scale-105 transition">
+            const div = document.createElement('div');
+            div.className='bg-white rounded-lg shadow-md p-5 flex flex-col sm:flex-row items-center justify-between result-card';
+            div.innerHTML=`
                 <div>
                     <div class="flex items-center space-x-4">
                         <span class="font-bold text-lg text-blue-600">${j.departureTime}</span>
@@ -296,9 +324,9 @@ document.addEventListener('DOMContentLoaded', () => {
                 <div class="mt-4 sm:mt-0 sm:ml-6 text-center sm:text-right">
                     <p class="text-xl font-bold">₹${j.totalFare.toFixed(2)}</p>
                     <p class="text-xs text-gray-500">${j.passengers} Passenger(s)</p>
-                    <button class="book-now-btn mt-2 w-full sm:w-auto bg-blue-600 text-white py-2 px-6 rounded-md hover:bg-blue-700" data-journey='${JSON.stringify(j)}'>Book Now</button>
-                </div>
-            </div>`;
+                    <button class="book-now-btn mt-2 w-full sm:w-auto bg-blue-600 text-white py-2 px-6 rounded-md hover:bg-blue-700 transform transition-transform hover:scale-105" data-journey='${JSON.stringify(j)}'>Book Now</button>
+                </div>`;
+            resultsContainer.appendChild(div);
         });
     }
 
@@ -322,10 +350,10 @@ document.addEventListener('DOMContentLoaded', () => {
     });
     closeConfirmationModalBtn.addEventListener('click', ()=>hideModal(confirmationModal));
 
-    function showModal(m){ m.classList.remove('opacity-0','pointer-events-none'); }
-    function hideModal(m){ m.classList.add('opacity-0','pointer-events-none'); }
+    function showModal(m){ m.classList.add('show'); }
+    function hideModal(m){ m.classList.remove('show'); }
 
-    // --- Terminals & News ---
+    // Terminals & News
     const TERMINAL_URL='https://raw.githubusercontent.com/e3ob/wm-test/refs/heads/main/terminal.json';
     const NEWS_URL='https://raw.githubusercontent.com/e3ob/wm-test/refs/heads/main/news.json';
     const terminalsContainer=document.getElementById('terminals-container');
@@ -346,7 +374,7 @@ document.addEventListener('DOMContentLoaded', () => {
             terminalsContainer.innerHTML='';
             data.forEach(t=>{
                 const div=document.createElement('div');
-                div.className='flex items-center p-3 border-b hover:bg-cyan-50 cursor-pointer transition';
+                div.className='flex items-center p-3 border-b terminal-item';
                 div.dataset.lat=t.latitude;
                 div.dataset.lng=t.longitude;
                 div.dataset.name=t.name;
@@ -379,7 +407,7 @@ document.addEventListener('DOMContentLoaded', () => {
             newsContainer.innerHTML='';
             data.slice(0,5).forEach(n=>{
                 const div=document.createElement('div');
-                div.className='p-2 border-b last:border-b-0';
+                div.className='p-2 border-b last:border-b-0 news-item';
                 div.innerHTML=`<h4 class="font-medium text-gray-900">${n.title}</h4><p class="text-xs text-gray-500 mt-0.5">${n.shortDescription.substring(0,50)}...</p>`;
                 newsContainer.appendChild(div);
             });
