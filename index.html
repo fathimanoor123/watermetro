@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>MetroLink & WaterMetro Dashboard</title>
+<title>AquaMetro Dashboard</title>
 
 <script src="https://cdn.tailwindcss.com"></script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -14,7 +14,7 @@
     body { font-family: 'Inter', sans-serif; background-color: #f0f4f8; }
     .hero-section {
         background-image: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), 
-                          url('https://placehold.co/1920x1080/003366/FFFFFF?text=Metro+Train');
+                          url('https://placehold.co/1920x1080/003366/FFFFFF?text=AquaMetro');
         background-size: cover;
         background-position: center;
     }
@@ -32,7 +32,7 @@
     <nav class="container mx-auto px-4 sm:px-6 lg:px-8">
         <div class="flex items-center justify-between h-16">
             <div class="flex items-center space-x-4">
-                <span class="text-xl font-bold text-gray-800">MetroLink & WaterMetro</span>
+                <span class="text-xl font-bold text-gray-800">AquaMetro</span>
             </div>
             <div class="hidden md:block">
                 <div class="ml-10 flex items-baseline space-x-4">
@@ -48,8 +48,8 @@
 <!-- Hero Section -->
 <section class="hero-section text-white">
     <div class="container mx-auto px-4 sm:px-6 lg:px-8 py-20 text-center">
-        <h1 class="text-4xl md:text-5xl font-bold mb-4">Welcome to Your City's Metro</h1>
-        <p class="text-lg md:text-xl text-gray-200">Quick, Safe, and Convenient Travel</p>
+        <h1 class="text-4xl md:text-5xl font-bold mb-4">Welcome to AquaMetro</h1>
+        <p class="text-lg md:text-xl text-gray-200">Fast, Safe, and Eco-Friendly Water Transport</p>
     </div>
 </section>
 
@@ -126,7 +126,7 @@
     </div>
 </div>
 
-<!-- Confirmation Modal -->
+<!-- Confirmation Modal with QR -->
 <div id="confirmation-modal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50 modal-backdrop opacity-0 pointer-events-none">
     <div class="bg-white rounded-lg shadow-xl w-full max-w-md p-6 text-center modal-content">
         <div class="mx-auto flex items-center justify-center h-12 w-12 rounded-full bg-green-100">
@@ -138,7 +138,7 @@
         <div class="mt-4 text-sm text-gray-600">
             <p>Your e-ticket has been generated.</p>
             <div id="qr-code-container" class="mt-4">
-                <img src="https://placehold.co/200x200/FFFFFF/000000?text=QR+Code" alt="QR Code" class="mx-auto">
+                <img id="qr-code" src="" alt="QR Code" class="mx-auto">
             </div>
             <p class="mt-2">Show this QR at the entry gate.</p>
         </div>
@@ -155,14 +155,11 @@
         <!-- Terminals List -->
         <section class="lg:col-span-2 bg-white rounded-lg shadow-xl p-6">
             <h1 class="text-3xl font-bold text-gray-800 mb-6">Terminals</h1>
-            
             <div id="terminals-loader" class="text-center py-10">
                 <div class="loader ease-linear rounded-full border-4 border-t-4 border-gray-200 h-12 w-12 mx-auto"></div>
                 <p class="mt-4 text-gray-600">Loading terminal information...</p>
             </div>
-
             <div id="terminals-container" class="space-y-2"></div>
-
             <div id="terminals-error" class="text-red-500 text-center py-10 hidden">
                 <p>Failed to load terminal data or no data found.</p>
             </div>
@@ -172,23 +169,21 @@
         <aside class="lg:col-span-1 space-y-8">
             <div class="bg-white p-4 rounded-lg shadow-xl" id="news-section">
                 <h2 class="text-xl font-semibold text-gray-800 border-b pb-2 mb-3">Latest News</h2>
-
                 <div id="news-loader" class="text-center py-4">
                     <div class="loader ease-linear rounded-full border-2 border-t-2 border-gray-200 h-8 w-8 mx-auto"></div>
                 </div>
-
                 <div id="news-container" class="space-y-2 text-sm"></div>
-
                 <div id="news-error" class="text-red-500 text-center text-xs pt-4 hidden">
                     <p>No recent news available.</p>
                 </div>
             </div>
 
+            <!-- Terminal Details with Map -->
             <div class="bg-white p-4 rounded-lg shadow-xl">
                 <h2 class="text-xl font-semibold text-gray-800 border-b pb-2 mb-3">Terminal Details</h2>
                 <div id="terminal-detail" class="text-sm text-gray-600 space-y-3">
                     <p class="text-center text-gray-500">Click on a terminal to view details here.</p>
-                    <div id="map-placeholder" class="bg-gray-200 h-32 rounded-md flex items-center justify-center text-gray-500"></div>
+                    <div id="map-placeholder" class="bg-gray-200 h-48 rounded-md flex items-center justify-center text-gray-500"></div>
                 </div>
             </div>
         </aside>
@@ -198,7 +193,7 @@
 <!-- Footer -->
 <footer class="bg-gray-800 text-white mt-12">
     <div class="container mx-auto px-4 sm:px-6 lg:px-8 py-8 text-center text-sm">
-        <p>&copy; 2025 MetroLink & WaterMetro. All Rights Reserved.</p>
+        <p>&copy; 2025 AquaMetro. All Rights Reserved.</p>
     </div>
 </footer>
 
@@ -206,20 +201,20 @@
 <script>
 document.addEventListener('DOMContentLoaded', () => {
 
-    // --- MetroLink Booking JS ---
+    // Stations
     const stations = ["Central Park","City Hall","Downtown","East Liberty","Financial District",
                       "Green Square","Harbor View","Industrial Zone","Junction Point",
                       "King's Cross","Liberty Heights","Metro Center","Northgate","Oakwood",
                       "Plaza","Queen's Street","Riverfront","South Bank","Tech Hub",
                       "University","Victory Monument","West End","Xavier's College",
                       "Yankee Stadium","Zion National Park"];
-    
+
     const fromStationSelect = document.getElementById('from-station');
     const toStationSelect = document.getElementById('to-station');
     const journeyDateInput = document.getElementById('journey-date');
     const bookingForm = document.getElementById('booking-form');
     const formError = document.getElementById('form-error');
-    
+
     const resultsTitle = document.getElementById('results-title');
     const resultsContainer = document.getElementById('results-container');
     const resultsLoader = document.getElementById('results-loader');
@@ -229,203 +224,171 @@ document.addEventListener('DOMContentLoaded', () => {
     const closePaymentModalBtn = document.getElementById('close-payment-modal');
     const confirmPaymentBtn = document.getElementById('confirm-payment-btn');
     const paymentSummary = document.getElementById('payment-summary');
-    
+
     const confirmationModal = document.getElementById('confirmation-modal');
     const closeConfirmationModalBtn = document.getElementById('close-confirmation-modal');
+    const qrCodeImg = document.getElementById('qr-code');
 
-    function populateStations() {
-        stations.forEach(st => {
-            fromStationSelect.add(new Option(st, st));
-            toStationSelect.add(new Option(st, st));
-        });
-    }
-    function setDefaultDate() {
-        const today = new Date().toISOString().split('T')[0];
-        journeyDateInput.value = today;
-        journeyDateInput.min = today;
-    }
+    // Populate station options
+    stations.forEach(st => {
+        fromStationSelect.add(new Option(st, st));
+        toStationSelect.add(new Option(st, st));
+    });
 
-    bookingForm.addEventListener('submit', (e) => {
+    const today = new Date().toISOString().split('T')[0];
+    journeyDateInput.value = today;
+    journeyDateInput.min = today;
+
+    bookingForm.addEventListener('submit', e => {
         e.preventDefault();
-        const fromStation = fromStationSelect.value;
-        const toStation = toStationSelect.value;
-        if (!fromStation || !toStation) return showError('Select both stations.');
-        if (fromStation === toStation) return showError('From & To cannot be same.');
+        const from = fromStationSelect.value;
+        const to = toStationSelect.value;
+        if(!from || !to) return showError('Select both stations.');
+        if(from === to) return showError('From & To cannot be same.');
         hideError();
         findJourneys();
     });
 
-    resultsContainer.addEventListener('click', (e) => {
-        if (e.target.classList.contains('book-now-btn')) {
-            const journeyData = JSON.parse(e.target.dataset.journey);
-            showPaymentModal(journeyData);
-        }
-    });
+    function showError(msg){ formError.textContent=msg; formError.classList.remove('hidden'); }
+    function hideError(){ formError.classList.add('hidden'); }
 
-    closePaymentModalBtn.addEventListener('click', () => hideModal(paymentModal));
-    confirmPaymentBtn.addEventListener('click', () => { hideModal(paymentModal); showModal(confirmationModal); });
-    closeConfirmationModalBtn.addEventListener('click', () => hideModal(confirmationModal));
-
-    function findJourneys() {
+    function findJourneys(){
         resultsTitle.classList.remove('hidden');
         resultsLoader.classList.remove('hidden');
         resultsContainer.innerHTML = ''; noResults.classList.add('hidden');
-        setTimeout(() => {
+        setTimeout(()=>{
             resultsLoader.classList.add('hidden');
             const from = fromStationSelect.value, to = toStationSelect.value, passengers = +document.getElementById('passengers').value;
-            const journeys = generateMockJourneys(from, to, passengers);
+            const journeys = generateMockJourneys(from,to,passengers);
             displayResults(journeys);
-        }, 1500);
+        },1500);
     }
-    function generateMockJourneys(from, to, passengers) {
-        const results = [], baseFare = Math.floor(Math.random()*30)+20;
-        for (let i=0;i<3;i++) {
-            const dep = 8+i*2, arr = dep+1, dur = Math.floor(Math.random()*20)+45;
-            results.push({ from,to,passengers,
+
+    function generateMockJourneys(from,to,passengers){
+        const results=[], baseFare=Math.floor(Math.random()*30)+20;
+        for(let i=0;i<3;i++){
+            const dep=8+i*2, arr=dep+1, dur=Math.floor(Math.random()*20)+45;
+            results.push({ from,to, passengers,
                 departureTime:`${String(dep).padStart(2,'0')}:${String(i*15).padStart(2,'0')}`,
                 arrivalTime:`${String(arr).padStart(2,'0')}:${String(i*10).padStart(2,'0')}`,
-                duration:`${dur} mins`, fare:baseFare+(i*5),
-                totalFare:(baseFare+(i*5))*passengers, trainType:i%2===0?"Express":"Regular"});
+                duration:`${dur} mins`,
+                totalFare:(baseFare+i*5)*passengers,
+                trainType:i%2===0?"Express":"Regular"
+            });
         }
         return results;
     }
-    function displayResults(journeys) {
-        if (journeys.length===0) return noResults.classList.remove('hidden');
-        journeys.forEach(journey => {
-            resultsContainer.innerHTML += `
+
+    function displayResults(journeys){
+        if(journeys.length===0){ noResults.classList.remove('hidden'); return; }
+        journeys.forEach(j=>{
+            resultsContainer.innerHTML+=`
             <div class="bg-white rounded-lg shadow-md p-5 flex flex-col sm:flex-row items-center justify-between hover:scale-105 transition">
                 <div>
                     <div class="flex items-center space-x-4">
-                        <span class="font-bold text-lg text-blue-600">${journey.departureTime}</span>
+                        <span class="font-bold text-lg text-blue-600">${j.departureTime}</span>
                         <span class="text-gray-500">&#8594;</span>
-                        <span class="font-bold text-lg text-blue-600">${journey.arrivalTime}</span>
-                        <span class="text-gray-500 ml-4">${journey.duration}</span>
-                        <span class="ml-4 px-2 py-1 text-xs font-semibold ${journey.trainType==='Express'?'bg-green-100 text-green-800':'bg-yellow-100 text-yellow-800'} rounded-full">${journey.trainType}</span>
+                        <span class="font-bold text-lg text-blue-600">${j.arrivalTime}</span>
+                        <span class="text-gray-500 ml-4">${j.duration}</span>
+                        <span class="ml-4 px-2 py-1 text-xs font-semibold ${j.trainType==='Express'?'bg-green-100 text-green-800':'bg-yellow-100 text-yellow-800'} rounded-full">${j.trainType}</span>
                     </div>
-                    <p class="text-sm text-gray-600 mt-1">${journey.from} to ${journey.to}</p>
+                    <p class="text-sm text-gray-600 mt-1">${j.from} to ${j.to}</p>
                 </div>
                 <div class="mt-4 sm:mt-0 sm:ml-6 text-center sm:text-right">
-                    <p class="text-xl font-bold">₹${journey.totalFare.toFixed(2)}</p>
-                    <p class="text-xs text-gray-500">${journey.passengers} Passenger(s)</p>
-                    <button class="book-now-btn mt-2 w-full sm:w-auto bg-blue-600 text-white py-2 px-6 rounded-md hover:bg-blue-700" data-journey='${JSON.stringify(journey)}'>
-                        Book Now
-                    </button>
+                    <p class="text-xl font-bold">₹${j.totalFare.toFixed(2)}</p>
+                    <p class="text-xs text-gray-500">${j.passengers} Passenger(s)</p>
+                    <button class="book-now-btn mt-2 w-full sm:w-auto bg-blue-600 text-white py-2 px-6 rounded-md hover:bg-blue-700" data-journey='${JSON.stringify(j)}'>Book Now</button>
                 </div>
             </div>`;
         });
     }
 
-    function showPaymentModal(journey) {
-        paymentSummary.innerHTML = `
-            <p><strong>From:</strong> ${journey.from}</p>
-            <p><strong>To:</strong> ${journey.to}</p>
-            <p><strong>Passengers:</strong> ${journey.passengers}</p>
-            <p><strong>Total Fare:</strong> ₹${journey.totalFare.toFixed(2)}</p>`;
-        showModal(paymentModal);
-    }
-    function showModal(modal) { modal.classList.remove('opacity-0','pointer-events-none'); }
-    function hideModal(modal) { modal.classList.add('opacity-0','pointer-events-none'); }
-    function showError(msg) { formError.textContent = msg; formError.classList.remove('hidden'); }
-    function hideError() { formError.classList.add('hidden'); }
-
-    populateStations(); setDefaultDate();
-
-    // --- WaterMetro Terminals & News JS ---
-    const TERMINAL_URL = 'https://raw.githubusercontent.com/e3ob/wm-test/refs/heads/main/terminal.json';
-    const NEWS_URL = 'https://raw.githubusercontent.com/e3ob/wm-test/refs/heads/main/news.json';
-
-    const terminalsContainer = document.getElementById('terminals-container');
-    const terminalsLoader = document.getElementById('terminals-loader');
-    const terminalsError = document.getElementById('terminals-error');
-    const newsLoader = document.getElementById('news-loader');
-    const newsError = document.getElementById('news-error');
-    const newsContainer = document.getElementById('news-container');
-    const terminalDetail = document.getElementById('terminal-detail');
-
-    let allTerminals = [];
-
-    async function fetchData(url) {
-        try {
-            const response = await fetch(url);
-            if(!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
-            const json = await response.json();
-            return json.data || [];
-        } catch(e) { console.error('Fetch error:', url, e); return null; }
-    }
-
-    async function loadTerminals() {
-        terminalsLoader.classList.remove('hidden');
-        const terminals = await fetchData(TERMINAL_URL);
-        terminalsLoader.classList.add('hidden');
-        if (terminals && Array.isArray(terminals) && terminals.length>0) {
-            allTerminals = terminals;
-            displayTerminals(terminals);
-            showTerminalDetails(terminals[0]);
-        } else { terminalsError.classList.remove('hidden'); }
-    }
-
-    function displayTerminals(terminals) {
-        terminalsContainer.innerHTML = '';
-        terminals.forEach(t=>{
-            const terminalItem = `<div class="flex items-center p-3 border-b hover:bg-cyan-50 cursor-pointer transition duration-150" data-id="${t.id}">
-                <svg class="h-5 w-5 text-cyan-600 mr-3 flex-shrink-0" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M15 10.5a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1 1 15 0Z" />
-                </svg>
-                <span class="font-medium">${t.name}</span>
-            </div>`;
-            terminalsContainer.innerHTML += terminalItem;
-        });
-    }
-
-    function showTerminalDetails(terminal) {
-        terminalDetail.innerHTML = `
-            <h3 class="text-lg font-bold text-cyan-700 mb-2">${terminal.name}</h3>
-            <p class="text-sm text-gray-600">${terminal.description}</p>
-            <div class="my-4 p-3 bg-cyan-50 rounded-md">
-                <p class="font-semibold text-cyan-800">Map Location</p>
-                <a href="${terminal.mapLocation}" target="_blank" class="text-sm text-cyan-600 hover:text-cyan-800 underline">
-                    Open in Google Maps
-                </a>
-            </div>
-        `;
-    }
-
-    async function loadNews() {
-        newsLoader.classList.remove('hidden');
-        const news = await fetchData(NEWS_URL);
-        newsLoader.classList.add('hidden');
-        if (news && Array.isArray(news) && news.length>0) {
-            const sortedNews = news.sort((a,b)=>new Date(b.publishedAt)-new Date(a.publishedAt)).slice(0,5);
-            displayNews(sortedNews);
-        } else newsError.classList.remove('hidden');
-    }
-
-    function displayNews(newsItems) {
-        newsContainer.innerHTML = '';
-        newsItems.forEach(item=>{
-            const newsItem = `<div class="p-2 border-b last:border-b-0">
-                <h4 class="font-medium text-gray-900">${item.title}</h4>
-                <p class="text-xs text-gray-500 mt-0.5">${item.shortDescription.substring(0,50)}...</p>
-            </div>`;
-            newsContainer.innerHTML += newsItem;
-        });
-    }
-
-    terminalsContainer.addEventListener('click', (e)=>{
-        const item = e.target.closest('[data-id]');
-        if(item) {
-            document.querySelectorAll('#terminals-container > div').forEach(div=>div.classList.remove('bg-cyan-100'));
-            item.classList.add('bg-cyan-100');
-            const id = parseInt(item.dataset.id);
-            const terminal = allTerminals.find(t=>t.id===id);
-            if(terminal) showTerminalDetails(terminal);
+    resultsContainer.addEventListener('click', e=>{
+        if(e.target.classList.contains('book-now-btn')){
+            const j = JSON.parse(e.target.dataset.journey);
+            paymentSummary.innerHTML=`
+                <p><strong>From:</strong> ${j.from}</p>
+                <p><strong>To:</strong> ${j.to}</p>
+                <p><strong>Passengers:</strong> ${j.passengers}</p>
+                <p><strong>Total Fare:</strong> ₹${j.totalFare.toFixed(2)}</p>`;
+            qrCodeImg.src=`https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${encodeURIComponent(JSON.stringify(j))}`;
+            showModal(paymentModal);
         }
     });
 
+    closePaymentModalBtn.addEventListener('click', ()=>hideModal(paymentModal));
+    confirmPaymentBtn.addEventListener('click', ()=>{
+        hideModal(paymentModal);
+        showModal(confirmationModal);
+    });
+    closeConfirmationModalBtn.addEventListener('click', ()=>hideModal(confirmationModal));
+
+    function showModal(m){ m.classList.remove('opacity-0','pointer-events-none'); }
+    function hideModal(m){ m.classList.add('opacity-0','pointer-events-none'); }
+
+    // --- Terminals & News ---
+    const TERMINAL_URL='https://raw.githubusercontent.com/e3ob/wm-test/refs/heads/main/terminal.json';
+    const NEWS_URL='https://raw.githubusercontent.com/e3ob/wm-test/refs/heads/main/news.json';
+    const terminalsContainer=document.getElementById('terminals-container');
+    const terminalsLoader=document.getElementById('terminals-loader');
+    const terminalsError=document.getElementById('terminals-error');
+    const terminalDetail=document.getElementById('terminal-detail');
+    const mapPlaceholder=document.getElementById('map-placeholder');
+    const newsContainer=document.getElementById('news-container');
+    const newsLoader=document.getElementById('news-loader');
+    const newsError=document.getElementById('news-error');
+
+    async function fetchJSON(url){ try{ const r=await fetch(url); if(!r.ok) throw new Error('HTTP '+r.status); const d=await r.json(); return d.data||[]; }catch(e){ console.error(e); return null; } }
+
+    async function loadTerminals(){
+        const data=await fetchJSON(TERMINAL_URL);
+        terminalsLoader.classList.add('hidden');
+        if(data && data.length>0){
+            terminalsContainer.innerHTML='';
+            data.forEach(t=>{
+                const div=document.createElement('div');
+                div.className='flex items-center p-3 border-b hover:bg-cyan-50 cursor-pointer transition';
+                div.dataset.lat=t.latitude;
+                div.dataset.lng=t.longitude;
+                div.dataset.name=t.name;
+                div.dataset.desc=t.description;
+                div.dataset.map=t.mapLocation;
+                div.textContent=t.name;
+                terminalsContainer.appendChild(div);
+            });
+            showTerminalDetails(data[0]);
+        } else terminalsError.classList.remove('hidden');
+    }
+
+    function showTerminalDetails(t){
+        terminalDetail.innerHTML=`
+            <h3 class="text-lg font-bold text-cyan-700 mb-2">${t.name}</h3>
+            <p class="text-sm text-gray-600">${t.description}</p>`;
+        mapPlaceholder.innerHTML=`<iframe width="100%" height="100%" style="border:0;" loading="lazy" allowfullscreen
+            src="https://www.google.com/maps/embed/v1/place?key=YOUR_GOOGLE_MAPS_API_KEY&q=${encodeURIComponent(t.name)}"></iframe>`;
+    }
+
+    terminalsContainer.addEventListener('click', e=>{
+        const t=e.target;
+        if(t.dataset.name) showTerminalDetails(t.dataset);
+    });
+
+    async function loadNews(){
+        const data=await fetchJSON(NEWS_URL);
+        newsLoader.classList.add('hidden');
+        if(data && data.length>0){
+            newsContainer.innerHTML='';
+            data.slice(0,5).forEach(n=>{
+                const div=document.createElement('div');
+                div.className='p-2 border-b last:border-b-0';
+                div.innerHTML=`<h4 class="font-medium text-gray-900">${n.title}</h4><p class="text-xs text-gray-500 mt-0.5">${n.shortDescription.substring(0,50)}...</p>`;
+                newsContainer.appendChild(div);
+            });
+        } else newsError.classList.remove('hidden');
+    }
+
     loadTerminals();
     loadNews();
-
 });
 </script>
 </body>
